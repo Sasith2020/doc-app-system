@@ -1,21 +1,23 @@
-function FloatingNav() {
+type FloatingNavProps = {
+  activeTab: string
+  onChange: (tab: string) => void
+}
+
+const tabs = ['inbox', 'pending', 'approved', 'returned', 'holed']
+
+function FloatingNav({ activeTab, onChange }: FloatingNavProps) {
   return (
     <div className="floating-nav">
-      <button type="button" className="tab active">
-        Inbox
-      </button>
-      <button type="button" className="tab">
-        Pending
-      </button>
-      <button type="button" className="tab">
-        Approved
-      </button>
-      <button type="button" className="tab">
-        Returned
-      </button>
-      <button type="button" className="tab">
-        Holed
-      </button>
+      {tabs.map((tab) => (
+        <button
+          key={tab}
+          type="button"
+          className={`tab ${activeTab === tab ? 'active' : ''}`}
+          onClick={() => onChange(tab)}
+        >
+          {tab}
+        </button>
+      ))}
     </div>
   )
 }
