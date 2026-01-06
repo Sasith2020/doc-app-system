@@ -174,6 +174,7 @@
   gap: 1rem;
   padding: 0 2rem;
   z-index: 10;
+  flex-wrap: wrap;
 }
 
 .pill {
@@ -211,6 +212,7 @@
   position: sticky;
   top: 84px;
   z-index: 5;
+  flex-wrap: wrap;
 }
 
 .tab {
@@ -243,6 +245,7 @@
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .table-header h2 {
@@ -479,6 +482,38 @@
   z-index: 1;
 }
 
+@media (max-width: 1200px) {
+  .top-nav {
+    left: 200px;
+    padding: 0 1.5rem;
+  }
+
+  .side-nav {
+    width: 200px;
+  }
+
+  .dashboard-content {
+    margin-left: 200px;
+    padding: 96px 2rem 3rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .floating-nav {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .floating-nav::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .floating-nav::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.6);
+    border-radius: 999px;
+  }
+}
+
 @media (max-width: 900px) {
   .side-nav {
     position: static;
@@ -487,11 +522,16 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
   }
 
   .top-nav {
     position: static;
     left: 0;
+    height: auto;
+    padding: 1rem 1.5rem;
+    justify-content: flex-start;
   }
 
   .dashboard-content {
@@ -501,5 +541,34 @@
 
   .table-grid {
     grid-template-columns: 1fr;
+  }
+
+  .table-header {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .login-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .login-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .top-nav {
+    gap: 0.5rem;
+  }
+
+  .table-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .popup-card {
+    border-radius: 16px;
   }
 }
