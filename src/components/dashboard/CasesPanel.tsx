@@ -18,21 +18,37 @@ function CasesPanel({ title, description, data }: CasesPanelProps) {
     {
       key: 'caseId',
       header: 'Case ID',
+      accessor: (row: CaseRow) => row.id,
+      type: 'string' as const,
+      sortable: true,
+      filter: 'text' as const,
       render: (row: CaseRow) => row.id,
     },
     {
       key: 'createdDiv',
       header: 'Created Div',
+      accessor: (row: CaseRow) => row.div,
+      type: 'string' as const,
+      sortable: true,
+      filter: 'text' as const,
       render: (row: CaseRow) => row.div,
     },
     {
       key: 'bucket',
       header: 'Bucket',
+      accessor: (row: CaseRow) => row.bucket ?? '',
+      type: 'string' as const,
+      sortable: true,
+      filter: 'text' as const,
       render: (row: CaseRow) => row.bucket ?? '-',
     },
     {
       key: 'status',
       header: 'Status',
+      accessor: (row: CaseRow) => row.status,
+      type: 'string' as const,
+      sortable: true,
+      filter: 'text' as const,
       render: (row: CaseRow) => <span className="status-pill">{row.status}</span>,
     },
     {
@@ -66,6 +82,11 @@ function CasesPanel({ title, description, data }: CasesPanelProps) {
         pageSizeOptions={[5, 10, 15]}
         showPageSizeSelector
         getRowKey={(row) => row.id}
+        enableSearch
+        enableFilters
+        enableSorting
+        enableReset
+        searchPlaceholder="Search cases"
       />
     </section>
   )
