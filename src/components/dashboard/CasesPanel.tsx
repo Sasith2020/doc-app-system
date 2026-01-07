@@ -16,12 +16,12 @@ type CasesPanelProps = {
 function CasesPanel({ title, description, data }: CasesPanelProps) {
   const columns = [
     {
-      key: 'caseId',
+      key: 'id',
       header: 'Case ID',
       render: (row: CaseRow) => row.id,
     },
     {
-      key: 'createdDiv',
+      key: 'div',
       header: 'Created Div',
       render: (row: CaseRow) => row.div,
     },
@@ -39,6 +39,7 @@ function CasesPanel({ title, description, data }: CasesPanelProps) {
       key: 'action',
       header: 'Action',
       align: 'right' as const,
+      searchable: false,
       render: () => (
         <button type="button" className="ghost-btn">
           View

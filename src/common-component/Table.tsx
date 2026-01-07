@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { ChangeEvent, ReactNode } from 'react'
 
 type TableColumn<T> = {
@@ -7,6 +7,8 @@ type TableColumn<T> = {
   width?: string
   align?: 'left' | 'center' | 'right'
   render?: (row: T, rowIndex: number) => ReactNode
+  searchable?: boolean
+  getSearchValue?: (row: T) => string
 }
 
 type TableProps<T> = {
@@ -16,6 +18,10 @@ type TableProps<T> = {
   defaultPageSize?: number
   showPageSizeSelector?: boolean
   getRowKey?: (row: T, rowIndex: number) => string
+  enableGlobalSearch?: boolean
+  enableColumnSearch?: boolean
+  globalSearchPlaceholder?: string
+  columnSearchPlaceholder?: string
 }
 
 function Table<T>({
@@ -25,18 +31,85 @@ function Table<T>({
   defaultPageSize = 5,
   showPageSizeSelector = true,
   getRowKey,
+  enableGlobalSearch = true,
+  enableColumnSearch = true,
+  globalSearchPlaceholder = 'Search all columns...',
+  columnSearchPlaceholder = 'Search',
 }: TableProps<T>) {
   const [pageSize, setPageSize] = useState(defaultPageSize)
   const [page, setPage] = useState(1)
+  const [globalQuery, setGlobalQuery] = useState('')
+  const [columnQueries, setColumnQueries] = useState<Record<string, string>>({})
+  const [openColumnSearches, setOpenColumnSearches] = useState<
+    Record<string, boolean>
+  >({})
 
-  const totalPages = Math.max(1, Math.ceil(data.length / pageSize))
+  const searchableColumns = useMemo(
+    () => columns.filter((column) => column.searchable !== false),
+    [columns],
+  )
+
+  const getColumnSearchValue = (row: T, column: TableColumn<T>) => {
+    if (column.getSearchValue) {
+      return column.getSearchValue(row)
+    }
+    const rowRecord = row as Record<string, unknown>
+    const value = rowRecord[column.key]
+    if (value === null || value === undefined) {
+      return ''
+    }
+    return String(value)
+  }
+
+  const filteredData = useMemo(() => {
+    const normalizedGlobal = globalQuery.trim().toLowerCase()
+    const normalizedColumnQueries = Object.fromEntries(
+      Object.entries(columnQueries)
+        .map(([key, value]) => [key, value.trim().toLowerCase()])
+        .filter(([, value]) => value.length > 0),
+    )
+
+    return data.filter((row) => {
+      if (normalizedGlobal) {
+        const matchesGlobal = searchableColumns.some((column) =>
+          getColumnSearchValue(row, column)
+            .toLowerCase()
+            .includes(normalizedGlobal),
+        )
+        if (!matchesGlobal) {
+          return false
+        }
+      }
+
+      for (const [columnKey, query] of Object.entries(
+        normalizedColumnQueries,
+      )) {
+        const column = columns.find((entry) => entry.key === columnKey)
+        if (!column) {
+          continue
+        }
+        const value = getColumnSearchValue(row, column)
+        if (!value.toLowerCase().includes(query)) {
+          return false
+        }
+      }
+
+      return true
+    })
+  }, [columns, columnQueries, data, globalQuery, searchableColumns])
+
+  useEffect(() => {
+    setPage(1)
+  }, [globalQuery, columnQueries, pageSize])
+
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / pageSize))
 
   const safePage = Math.min(page, totalPages)
 
   const pageData = useMemo(() => {
     const start = (safePage - 1) * pageSize
-    return data.slice(start, start + pageSize)
-  }, [data, pageSize, safePage])
+    return filteredData.slice(start, start + pageSize)
+  }, [filteredData, pageSize, safePage])
 
   const handlePageChange = (nextPage: number) => {
     setPage(Math.min(Math.max(nextPage, 1), totalPages))
@@ -48,8 +121,59 @@ function Table<T>({
     setPage(1)
   }
 
+  const handleColumnQueryChange = (columnKey: string, value: string) => {
+    setColumnQueries((prev) => ({
+      ...prev,
+      [columnKey]: value,
+    }))
+    setOpenColumnSearches((prev) => ({
+      ...prev,
+      [columnKey]: true,
+    }))
+  }
+
+  const toggleColumnSearch = (columnKey: string) => {
+    setOpenColumnSearches((prev) => ({
+      ...prev,
+      [columnKey]: !prev[columnKey],
+    }))
+  }
+
+  const clearColumnQuery = (columnKey: string) => {
+    setColumnQueries((prev) => ({
+      ...prev,
+      [columnKey]: '',
+    }))
+  }
+
   return (
     <div className="table-component">
+      {enableGlobalSearch && (
+        <div className="table-toolbar">
+          <div className="table-search">
+            <span className="table-search-icon" aria-hidden="true">
+              🔍
+            </span>
+            <input
+              type="search"
+              value={globalQuery}
+              onChange={(event) => setGlobalQuery(event.target.value)}
+              placeholder={globalSearchPlaceholder}
+              aria-label="Search table"
+            />
+            {globalQuery && (
+              <button
+                type="button"
+                className="table-icon-btn"
+                onClick={() => setGlobalQuery('')}
+                aria-label="Clear search"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        </div>
+      )}
       <div className="table-grid table-column-header">
         {columns.map((column) => (
           <div
@@ -60,7 +184,45 @@ function Table<T>({
               textAlign: column.align ?? 'left',
             }}
           >
-            {column.header}
+            <div className="table-column-header-content">
+              <span>{column.header}</span>
+              {enableColumnSearch && column.searchable !== false && (
+                <button
+                  type="button"
+                  className="table-icon-btn"
+                  onClick={() => toggleColumnSearch(column.key)}
+                  aria-label={`Search ${column.header}`}
+                >
+                  🔍
+                </button>
+              )}
+            </div>
+            {enableColumnSearch &&
+              column.searchable !== false &&
+              (openColumnSearches[column.key] ||
+                columnQueries[column.key]) && (
+                <div className="table-column-search">
+                  <input
+                    type="search"
+                    value={columnQueries[column.key] ?? ''}
+                    onChange={(event) =>
+                      handleColumnQueryChange(column.key, event.target.value)
+                    }
+                    placeholder={columnSearchPlaceholder}
+                    aria-label={`Search ${column.header} column`}
+                  />
+                  {columnQueries[column.key] && (
+                    <button
+                      type="button"
+                      className="table-icon-btn"
+                      onClick={() => clearColumnQuery(column.key)}
+                      aria-label={`Clear ${column.header} search`}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              )}
           </div>
         ))}
       </div>
@@ -93,8 +255,10 @@ function Table<T>({
       <div className="table-footer">
         <div className="table-footer-left">
           <span>
-            Showing {(safePage - 1) * pageSize + 1}-
-            {Math.min(safePage * pageSize, data.length)} of {data.length}
+            Showing{' '}
+            {filteredData.length === 0 ? 0 : (safePage - 1) * pageSize + 1}-
+            {Math.min(safePage * pageSize, filteredData.length)} of{' '}
+            {filteredData.length}
           </span>
           {showPageSizeSelector && (
             <label className="table-page-size">
