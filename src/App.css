@@ -315,6 +315,12 @@
   font-size: 0.9rem;
 }
 
+.table-search-icon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
 .table-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -395,6 +401,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.table-icon-btn svg {
+  width: 14px;
+  height: 14px;
+  display: block;
 }
 
 .table-icon-btn:hover {

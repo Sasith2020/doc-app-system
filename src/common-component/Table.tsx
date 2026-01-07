@@ -139,20 +139,18 @@ function Table<T>({
     }))
   }
 
-  const clearColumnQuery = (columnKey: string) => {
-    setColumnQueries((prev) => ({
-      ...prev,
-      [columnKey]: '',
-    }))
-  }
-
   return (
     <div className="table-component">
       {enableGlobalSearch && (
         <div className="table-toolbar">
           <div className="table-search">
             <span className="table-search-icon" aria-hidden="true">
-              🔍
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M11 19a8 8 0 1 1 5.293-14.04A8 8 0 0 1 11 19Zm0-14a6 6 0 1 0 4.06 10.414A6 6 0 0 0 11 5Zm9.707 14.293-4.11-4.11 1.414-1.415 4.11 4.11-1.414 1.415Z"
+                  fill="currentColor"
+                />
+              </svg>
             </span>
             <input
               type="search"
@@ -161,16 +159,6 @@ function Table<T>({
               placeholder={globalSearchPlaceholder}
               aria-label="Search table"
             />
-            {globalQuery && (
-              <button
-                type="button"
-                className="table-icon-btn"
-                onClick={() => setGlobalQuery('')}
-                aria-label="Clear search"
-              >
-                ✕
-              </button>
-            )}
           </div>
         </div>
       )}
@@ -193,7 +181,12 @@ function Table<T>({
                   onClick={() => toggleColumnSearch(column.key)}
                   aria-label={`Search ${column.header}`}
                 >
-                  🔍
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M11 19a8 8 0 1 1 5.293-14.04A8 8 0 0 1 11 19Zm0-14a6 6 0 1 0 4.06 10.414A6 6 0 0 0 11 5Zm9.707 14.293-4.11-4.11 1.414-1.415 4.11 4.11-1.414 1.415Z"
+                      fill="currentColor"
+                    />
+                  </svg>
                 </button>
               )}
             </div>
@@ -211,16 +204,6 @@ function Table<T>({
                     placeholder={columnSearchPlaceholder}
                     aria-label={`Search ${column.header} column`}
                   />
-                  {columnQueries[column.key] && (
-                    <button
-                      type="button"
-                      className="table-icon-btn"
-                      onClick={() => clearColumnQuery(column.key)}
-                      aria-label={`Clear ${column.header} search`}
-                    >
-                      ✕
-                    </button>
-                  )}
                 </div>
               )}
           </div>
