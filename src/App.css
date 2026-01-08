@@ -573,6 +573,120 @@
   z-index: 1;
 }
 
+.view-case-page {
+  position: relative;
+  min-height: 100vh;
+  background: #f4f6fb;
+}
+
+.view-case-content {
+  margin-left: 220px;
+  padding: 96px 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.view-case-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.view-case-eyebrow {
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #3754db;
+}
+
+.view-case-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.view-case-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.section-header h2 {
+  margin: 0;
+}
+
+.section-header p {
+  margin: 0.35rem 0 0;
+  color: #6b7280;
+}
+
+.case-info-list,
+.key-field-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.case-info-list div,
+.key-field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.meta-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.meta-value {
+  font-size: 0.98rem;
+  color: #111827;
+  font-weight: 600;
+}
+
+.case-body {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.table-action-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.case-action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.action-btn:disabled {
+  background: #cbd5f5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
 @media (max-width: 1200px) {
   .top-nav {
     left: 200px;
@@ -584,6 +698,11 @@
   }
 
   .dashboard-content {
+    margin-left: 200px;
+    padding: 96px 2rem 3rem;
+  }
+
+  .view-case-content {
     margin-left: 200px;
     padding: 96px 2rem 3rem;
   }
@@ -626,6 +745,11 @@
   }
 
   .dashboard-content {
+    margin-left: 0;
+    padding: 2rem 1.5rem 3rem;
+  }
+
+  .view-case-content {
     margin-left: 0;
     padding: 2rem 1.5rem 3rem;
   }

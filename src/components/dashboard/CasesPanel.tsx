@@ -1,6 +1,6 @@
 import Table from '../../common-component/Table'
 
-type CaseRow = {
+export type CaseRow = {
   id: string
   div: string
   status: string
@@ -11,9 +11,10 @@ type CasesPanelProps = {
   title: string
   description: string
   data: CaseRow[]
+  onViewCase?: (row: CaseRow) => void
 }
 
-function CasesPanel({ title, description, data }: CasesPanelProps) {
+function CasesPanel({ title, description, data, onViewCase }: CasesPanelProps) {
   const columns = [
     {
       key: 'id',
@@ -40,8 +41,12 @@ function CasesPanel({ title, description, data }: CasesPanelProps) {
       header: 'Action',
       align: 'right' as const,
       searchable: false,
-      render: () => (
-        <button type="button" className="ghost-btn">
+      render: (row: CaseRow) => (
+        <button
+          type="button"
+          className="ghost-btn"
+          onClick={() => onViewCase?.(row)}
+        >
           View
         </button>
       ),

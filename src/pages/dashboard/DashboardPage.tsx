@@ -5,31 +5,33 @@ import HoledTab from '../../components/dashboard/HoledTab'
 import InboxTab from '../../components/dashboard/InboxTab'
 import PendingTab from '../../components/dashboard/PendingTab'
 import ReturnedTab from '../../components/dashboard/ReturnedTab'
+import type { CaseRow } from '../../components/dashboard/CasesPanel'
 import SideNav from '../../common-component/SideNav'
 import TopNav from '../../common-component/TopNav'
 
 type DashboardPageProps = {
   onLogout: () => void
+  onViewCase: (row: CaseRow) => void
 }
 
-function DashboardPage({ onLogout }: DashboardPageProps) {
+function DashboardPage({ onLogout, onViewCase }: DashboardPageProps) {
   const [activeTab, setActiveTab] = useState('inbox')
 
   const tabContent = useMemo(() => {
     switch (activeTab) {
       case 'pending':
-        return <PendingTab />
+        return <PendingTab onViewCase={onViewCase} />
       case 'approved':
-        return <ApprovedTab />
+        return <ApprovedTab onViewCase={onViewCase} />
       case 'returned':
-        return <ReturnedTab />
+        return <ReturnedTab onViewCase={onViewCase} />
       case 'holed':
-        return <HoledTab />
+        return <HoledTab onViewCase={onViewCase} />
       case 'inbox':
       default:
-        return <InboxTab />
+        return <InboxTab onViewCase={onViewCase} />
     }
-  }, [activeTab])
+  }, [activeTab, onViewCase])
 
   return (
     <section className="dashboard-page">
