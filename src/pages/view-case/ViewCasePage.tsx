@@ -1,6 +1,7 @@
+import ActionButtons from '../../common-component/ActionButtons'
 import SideNav from '../../common-component/SideNav'
-import TopNav from '../../common-component/TopNav'
 import Table from '../../common-component/Table'
+import TopNav from '../../common-component/TopNav'
 
 type KeyField = {
   label: string
@@ -256,29 +257,7 @@ function ViewCasePage({ details, onBack, onLogout }: ViewCasePageProps) {
         </article>
 
         <div className="case-action-bar">
-          {details.status.toLowerCase() === 'holed' ? (
-            <button type="button" className="primary-btn action-btn">
-              Resume
-            </button>
-          ) : (
-            [
-              'Submit',
-              'Forward',
-              'Recommend',
-              'Approve',
-              'Return',
-              'Hold',
-            ].map((label) => (
-              <button
-                key={label}
-                type="button"
-                className="primary-btn action-btn"
-                disabled={!details.isInbox}
-              >
-                {label}
-              </button>
-            ))
-          )}
+          <ActionButtons status={details.status} isInbox={details.isInbox} />
         </div>
       </main>
     </section>
