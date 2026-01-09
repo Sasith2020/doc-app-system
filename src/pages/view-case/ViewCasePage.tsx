@@ -29,6 +29,7 @@ type ActionLogRow = {
 
 export type CaseDetails = {
   id: string
+  status: string
   initiatorName: string
   initiatorDiv: string
   initiatorDescription: string
@@ -255,23 +256,29 @@ function ViewCasePage({ details, onBack, onLogout }: ViewCasePageProps) {
         </article>
 
         <div className="case-action-bar">
-          {[
-            'Submit',
-            'Forward',
-            'Recommend',
-            'Approve',
-            'Return',
-            'Hold',
-          ].map((label) => (
-            <button
-              key={label}
-              type="button"
-              className="primary-btn action-btn"
-              disabled={!details.isInbox}
-            >
-              {label}
+          {details.status.toLowerCase() === 'holed' ? (
+            <button type="button" className="primary-btn action-btn">
+              Resume
             </button>
-          ))}
+          ) : (
+            [
+              'Submit',
+              'Forward',
+              'Recommend',
+              'Approve',
+              'Return',
+              'Hold',
+            ].map((label) => (
+              <button
+                key={label}
+                type="button"
+                className="primary-btn action-btn"
+                disabled={!details.isInbox}
+              >
+                {label}
+              </button>
+            ))
+          )}
         </div>
       </main>
     </section>

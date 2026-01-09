@@ -12,9 +12,16 @@ type CasesPanelProps = {
   description: string
   data: CaseRow[]
   onViewCase?: (row: CaseRow) => void
+  actionLabel?: string
 }
 
-function CasesPanel({ title, description, data, onViewCase }: CasesPanelProps) {
+function CasesPanel({
+  title,
+  description,
+  data,
+  onViewCase,
+  actionLabel = 'View',
+}: CasesPanelProps) {
   const columns = [
     {
       key: 'id',
@@ -47,7 +54,7 @@ function CasesPanel({ title, description, data, onViewCase }: CasesPanelProps) {
           className="ghost-btn"
           onClick={() => onViewCase?.(row)}
         >
-          View
+          {actionLabel}
         </button>
       ),
     },

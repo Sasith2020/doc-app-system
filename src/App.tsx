@@ -41,6 +41,7 @@ function App() {
 
   const buildCaseDetails = (row: CaseRow): CaseDetails => ({
     id: row.id,
+    status: row.status,
     initiatorName: 'Devi Fullname',
     initiatorDiv: row.div,
     initiatorDescription: 'Senior procurement analyst',
