@@ -1,4 +1,5 @@
 import CasesPanel from './CasesPanel'
+import type { CaseRow } from './CasesPanel'
 
 const inboxCases = [
   { id: 'CASE-10045', div: 'DIV-04', status: 'Inbox', bucket: 'Created' },
@@ -9,12 +10,17 @@ const inboxCases = [
   { id: 'CASE-10050', div: 'DIV-06', status: 'Inbox', bucket: 'Assigned' },
 ]
 
-function InboxTab() {
+type InboxTabProps = {
+  onViewCase: (row: CaseRow) => void
+}
+
+function InboxTab({ onViewCase }: InboxTabProps) {
   return (
     <CasesPanel
       title="Inbox cases"
       description="Created cases and cases assigned to your account."
       data={inboxCases}
+      onViewCase={onViewCase}
     />
   )
 }
